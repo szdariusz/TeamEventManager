@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2023-05-10T09:40:57" hostname="HUMLF1A5LVDR" time="0.814">
+<testsuite name="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2023-05-18T12:45:11" hostname="HUMLF1A5LVDR" time="0.752">
   <properties/>
-  <testcase name="addUserToAwaitQueueWithUserWhoIsMemberAlready()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.746"/>
-  <testcase name="addUserToAwaitQueueWithInvalidUserIdOrEventId()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.002"/>
+  <testcase name="addUserToAwaitQueueWithUserWhoIsMemberAlready()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.689"/>
+  <testcase name="addUserToAwaitQueueWithInvalidUserIdOrEventId()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.003"/>
   <testcase name="getAwaitingEventMembersValidRequest()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.003"/>
-  <testcase name="addUserToAwaitQueueWithGoodParameters()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.008"/>
-  <testcase name="getAllPublicEventsValidId()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.004"/>
+  <testcase name="addUserToAwaitQueueWithGoodParameters()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.007"/>
+  <testcase name="getAllPublicEventsValidId()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.003"/>
   <testcase name="getAwaitingEventMembersInvalidRequest()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.001"/>
   <testcase name="getEventMembersValidRequest()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.001"/>
   <testcase name="addUserToAwaitQueueRequestAlreadyExists()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.001"/>
@@ -14,11 +14,11 @@
   <testcase name="createEventNonExistingUser()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.002"/>
   <testcase name="addUserToEventNonExistingUser()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.002"/>
   <testcase name="declineAwaitingUserValidRequest()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.002"/>
-  <testcase name="getAllEventsForUserValidId()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.002"/>
+  <testcase name="getAllEventsForUserValidId()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.001"/>
   <testcase name="getAllEventsForUserInvalidId()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.001"/>
   <testcase name="addUserToEventValidRequest()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.002"/>
-  <testcase name="declineAwaitingUserNonExistingEvent()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.002"/>
-  <testcase name="getEventDetailsValidEventId()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.001"/>
+  <testcase name="declineAwaitingUserNonExistingEvent()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.003"/>
+  <testcase name="getEventDetailsValidEventId()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.003"/>
   <testcase name="getEventMembersNotAMember()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.001"/>
   <testcase name="removeEventMemberNonExistingMember()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.004"/>
   <testcase name="addUserToEventNonExistingEvent()" classname="com.DariusApp.TeamEventManager.Service.TeamEventServiceTest" time="0.002"/>

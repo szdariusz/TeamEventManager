@@ -3,7 +3,7 @@ package com.DariusApp.TeamEventManager.Service;
 import com.DariusApp.TeamEventManager.Entity.Role;
 import com.DariusApp.TeamEventManager.Entity.TEMUser;
 import com.DariusApp.TeamEventManager.Entity.UserRoleTypes;
-import com.DariusApp.TeamEventManager.Payload.Request.SignupRequest;
+import com.DariusApp.TeamEventManager.Payload.Request.auth.SignupRequest;
 import com.DariusApp.TeamEventManager.Payload.Response.MessageResponse;
 import com.DariusApp.TeamEventManager.Repository.RoleRepository;
 import com.DariusApp.TeamEventManager.Repository.TEMUserRepository;

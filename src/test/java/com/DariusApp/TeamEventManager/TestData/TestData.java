@@ -3,9 +3,9 @@ package com.DariusApp.TeamEventManager.TestData;
 import com.DariusApp.TeamEventManager.Entity.AwaitingQueueElement;
 import com.DariusApp.TeamEventManager.Entity.TEMUser;
 import com.DariusApp.TeamEventManager.Entity.TeamEvent;
-import com.DariusApp.TeamEventManager.Payload.Request.CreateEventRequest;
-import com.DariusApp.TeamEventManager.Payload.Request.ManageEventRequest;
-import com.DariusApp.TeamEventManager.Payload.Request.ManageMemberByIdRequest;
+import com.DariusApp.TeamEventManager.Payload.Request.events.CreateEventRequest;
+import com.DariusApp.TeamEventManager.Payload.Request.events.ManageEventRequest;
+import com.DariusApp.TeamEventManager.Payload.Request.members.ManageMemberByIdRequest;
 import com.DariusApp.TeamEventManager.Payload.Response.EventDetailResponse;
 import com.DariusApp.TeamEventManager.Payload.Response.EventListResponse;
 

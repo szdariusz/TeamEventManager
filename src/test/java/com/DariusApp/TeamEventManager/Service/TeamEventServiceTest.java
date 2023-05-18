@@ -3,7 +3,7 @@ package com.DariusApp.TeamEventManager.Service;
 import com.DariusApp.TeamEventManager.Entity.AwaitingQueueElement;
 import com.DariusApp.TeamEventManager.Entity.TEMUser;
 import com.DariusApp.TeamEventManager.Entity.TeamEvent;
-import com.DariusApp.TeamEventManager.Payload.Request.EventIdRequest;
+import com.DariusApp.TeamEventManager.Payload.Request.events.EventIdRequest;
 import com.DariusApp.TeamEventManager.Payload.Response.EventDetailResponse;
 import com.DariusApp.TeamEventManager.Payload.Response.EventListResponse;
 import com.DariusApp.TeamEventManager.Payload.Response.MessageResponse;

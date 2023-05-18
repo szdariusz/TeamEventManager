@@ -1,7 +1,7 @@
 package com.DariusApp.TeamEventManager.Controller;
 
-import com.DariusApp.TeamEventManager.Payload.Request.LoginRequest;
-import com.DariusApp.TeamEventManager.Payload.Request.SignupRequest;
+import com.DariusApp.TeamEventManager.Payload.Request.auth.LoginRequest;
+import com.DariusApp.TeamEventManager.Payload.Request.auth.SignupRequest;
 import com.DariusApp.TeamEventManager.Payload.Response.JwtResponse;
 import com.DariusApp.TeamEventManager.Security.Jwt.JwtUtils;
 import com.DariusApp.TeamEventManager.Security.Service.UserDetailsImpl;
@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Log4j2
+@Validated
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")

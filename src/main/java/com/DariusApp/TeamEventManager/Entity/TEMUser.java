@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
@@ -13,11 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "tem_users",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
-                @UniqueConstraint(columnNames = "email")
-        })
+@Table(name = "tem_users", uniqueConstraints = {@UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email")})
 public class TEMUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,27 +22,23 @@ public class TEMUser {
     private Integer id;
     @Column(name = "name")
     private String name;
-    @NotBlank
-    @Size(max = 20)
+    @NotBlank(message = "username have to contain non-whitespace characters")
+    @Size(min = 3, max = 20, message = "username length should be between 3-20 characters")
     @Column(name = "username")
     private String username;
-    @NotBlank
+    @NotBlank(message = "password have to contain non-whitespace characters")
+    @Size(min = 8, message = "password is too short")
     @JsonIgnore
     @Column(name = "password")
     private String password;
     @Column(name = "phone_number")
     private String phoneNumber;
-    @NotBlank
-    @Size(max = 50)
+    @Email(message = "incorrect email format")
     @Column(name = "email")
     private String emailAddress;
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "tem_users_user_roles",
-            joinColumns = {
-                    @JoinColumn(name = "tem_user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {
-                    @JoinColumn(name = "role_id", referencedColumnName = "id")})
+    @JoinTable(name = "tem_users_user_roles", joinColumns = {@JoinColumn(name = "tem_user_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Role> roles = new HashSet<>();
 
     protected TEMUser() {
@@ -75,14 +68,6 @@ public class TEMUser {
 
     @Override
     public String toString() {
-        return "TEMUser{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", emailAddress='" + emailAddress + '\'' +
-                ", roles=" + roles +
-                '}';
+        return "TEMUser{" + "id=" + id + ", name='" + name + '\'' + ", username='" + username + '\'' + ", password='" + password + '\'' + ", phoneNumber='" + phoneNumber + '\'' + ", emailAddress='" + emailAddress + '\'' + ", roles=" + roles + '}';
     }
 }

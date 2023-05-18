@@ -1,4 +1,4 @@
-package com.DariusApp.TeamEventManager.Payload.Request;
+package com.DariusApp.TeamEventManager.Payload.Request.members;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,23 +7,23 @@ import java.util.Objects;
 
 @Getter
 @Builder
-public class ManageMemberByNameRequest {
+public class ManageMemberByIdRequest {
     private Integer userId;
     private Integer eventId;
-    private String memberToManage;
+    private Integer memberToManageId;
 
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ManageMemberByNameRequest that = (ManageMemberByNameRequest) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(eventId, that.eventId) && Objects.equals(memberToManage, that.memberToManage);
+        ManageMemberByIdRequest that = (ManageMemberByIdRequest) o;
+        return Objects.equals(userId, that.userId) && Objects.equals(eventId, that.eventId) && Objects.equals(memberToManageId, that.memberToManageId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, eventId, memberToManage);
+        return Objects.hash(userId, eventId, memberToManageId);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ManageMemberByNameRequest {
         return "ManageMemberByIdRequest{" +
                 "userId=" + userId +
                 ", eventId=" + eventId +
-                ", memberToManageId=" + memberToManage +
+                ", memberToManageId=" + memberToManageId +
                 '}';
     }
 }

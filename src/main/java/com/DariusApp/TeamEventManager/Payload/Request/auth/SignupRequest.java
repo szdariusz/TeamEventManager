@@ -1,4 +1,4 @@
-package com.DariusApp.TeamEventManager.Payload.Request;
+package com.DariusApp.TeamEventManager.Payload.Request.auth;
 
 import lombok.Builder;
 import lombok.Getter;

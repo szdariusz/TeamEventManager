@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +19,7 @@ public class TeamEvent {
     @Column(name = "id")
     private Integer id;
     @Column(name = "name")
+    @Size(min = 3, max = 20, message = "The length of the event name should be 3-20 characters")
     private String name;
     @Column(name = "description")
     private String description;

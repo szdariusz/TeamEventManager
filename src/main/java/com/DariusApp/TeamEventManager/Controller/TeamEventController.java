@@ -1,6 +1,11 @@
 package com.DariusApp.TeamEventManager.Controller;
 
-import com.DariusApp.TeamEventManager.Payload.Request.*;
+import com.DariusApp.TeamEventManager.Payload.Request.auth.UserIdRequest;
+import com.DariusApp.TeamEventManager.Payload.Request.events.CreateEventRequest;
+import com.DariusApp.TeamEventManager.Payload.Request.events.EventIdRequest;
+import com.DariusApp.TeamEventManager.Payload.Request.events.ManageEventRequest;
+import com.DariusApp.TeamEventManager.Payload.Request.members.ManageMemberByIdRequest;
+import com.DariusApp.TeamEventManager.Payload.Request.members.ManageMemberByNameRequest;
 import com.DariusApp.TeamEventManager.Payload.Response.EventListResponse;
 import com.DariusApp.TeamEventManager.Service.TeamEventService;
 import lombok.extern.log4j.Log4j2;
@@ -49,9 +54,9 @@ public class TeamEventController {
     }
 
     @PostMapping("/invite")
-    public ResponseEntity<?> inviteUser(@RequestBody ManageMemberByIdRequest request) {
+    public ResponseEntity<?> inviteUser(@RequestBody ManageMemberByNameRequest request) {
         log.info("/invite  -->  " + request.toString());
-        return eventService.addUserToEvent(request);
+        return eventService.addUserToEventByName(request);
     }
 
     @PutMapping("/join")
