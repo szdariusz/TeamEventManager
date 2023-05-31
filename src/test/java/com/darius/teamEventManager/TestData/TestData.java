@@ -8,9 +8,11 @@ import com.darius.teamEventManager.payload.request.events.ManageEventRequest;
 import com.darius.teamEventManager.payload.request.members.ManageMemberByIdRequest;
 import com.darius.teamEventManager.payload.response.EventDetailResponse;
 import com.darius.teamEventManager.payload.response.EventListResponse;
+import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDate;
 
+@Profile({"dev", "test"})
 public class TestData {
 
     public static final String TEST_EVENT_NAME = "Test event name";
