@@ -82,15 +82,12 @@ public class TeamEventService {
 
         TeamEvent created = new TeamEvent(request.getName(), request.getDescription(), request.getDate(), request.getLocation(), request.getIsPublic());
 
-        Optional<TEMUser> creator = userRepository.findById(request.getUserId());
+        TEMUser creator = userRepository.findById(request.getUserId()).orElseThrow(NotFoundTEMUserException::new);
 
-        if (creator.isPresent()) {
-            created.setCreatorId(created.getCreatorId());
-            created.addTemUser(creator.get());
-            eventRepository.save(created);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.internalServerError().body(new MessageResponse(ResponseMessages.NOT_FOUND_USER_OR_EVENT));
+        created.setCreatorId(created.getCreatorId());
+        created.addTemUser(creator);
+        eventRepository.save(created);
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<List<EventListResponse>> getAllEventsForUser(Integer userId) {

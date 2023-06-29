@@ -209,14 +209,12 @@ class TeamEventServiceTest {
     void createEventNonExistingUser() {
         // given
         when(userRepository.findById(any())).thenReturn(Optional.empty());
-        ResponseEntity<?> expected = ResponseEntity.internalServerError().body(new MessageResponse(NOT_FOUND_USER_OR_EVENT));
 
         // when
-        ResponseEntity<?> actual = teamEventService.createEvent(TestData.TEST_CREATE_EVENT_REQUEST);
+        assertThrows(NotFoundTEMUserException.class, () -> teamEventService.createEvent(TestData.TEST_CREATE_EVENT_REQUEST));
 
         // then
         verify(eventRepository, times(0)).save(any());
-        assertEquals(expected, actual);
     }
 
     @Test
