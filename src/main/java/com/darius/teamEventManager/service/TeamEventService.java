@@ -3,6 +3,9 @@ package com.darius.teamEventManager.service;
 import com.darius.teamEventManager.entity.AwaitingQueueElement;
 import com.darius.teamEventManager.entity.TEMUser;
 import com.darius.teamEventManager.entity.TeamEvent;
+import com.darius.teamEventManager.exceptions.NotFoundEventException;
+import com.darius.teamEventManager.exceptions.NotFoundTEMUserException;
+import com.darius.teamEventManager.exceptions.RequestAlreadyExistsException;
 import com.darius.teamEventManager.payload.request.events.CreateEventRequest;
 import com.darius.teamEventManager.payload.request.events.EventIdRequest;
 import com.darius.teamEventManager.payload.request.events.ManageEventRequest;
@@ -37,22 +40,17 @@ public class TeamEventService {
 
     public ResponseEntity<?> addUserToAwaitQueue(ManageEventRequest request) {
 
-        boolean userExists = userRepository.existsById(request.getUserId());
-        Optional<TeamEvent> event = eventRepository.findById(request.getEventId());
+        TEMUser user = userRepository.findById(request.getUserId()).orElseThrow(NotFoundTEMUserException::new);
+        TeamEvent event = eventRepository.findById(request.getEventId()).orElseThrow(NotFoundEventException::new);
         boolean elementExists =
-                awaitingRepository.existsByUserIdAndEventId(request.getUserId(), request.getEventId());
+                awaitingRepository.existsByUserIdAndEventId(user.getId(), event.getId());
 
         if (elementExists) {
-            return ResponseEntity.internalServerError().body(new MessageResponse(ResponseMessages.ALREADY_REQUESTED));
+            throw new RequestAlreadyExistsException();
         }
-        if (event.isPresent() && userExists) {
-            if (isMemberOf(event.get(), request.getUserId())) {
-                return ResponseEntity.internalServerError().body(new MessageResponse(ResponseMessages.ALREADY_MEMBER));
-            }
-            awaitingRepository.save(new AwaitingQueueElement(request.getUserId(), request.getEventId()));
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.internalServerError().body(new MessageResponse(ResponseMessages.NOT_FOUND_USER_OR_EVENT));
+        awaitingRepository.save(new AwaitingQueueElement(request.getUserId(), request.getEventId()));
+
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<?> addUserToEvent(ManageMemberByIdRequest request) {
@@ -105,7 +103,7 @@ public class TeamEventService {
         Optional<TEMUser> user = userRepository.findById(userId);
         if (user.isPresent()) {
             List<EventListResponse> response =
-                    ConverterService.teamEventListToEventListResponse(eventRepository.findAllByTemUsers(user.get()));
+                    converter.teamEventListToEventListResponse(eventRepository.findAllByTemUsers(user.get()));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return ResponseEntity.internalServerError().build();
@@ -115,7 +113,7 @@ public class TeamEventService {
         Optional<TEMUser> user = userRepository.findById(userId);
         if (user.isPresent()) {
             List<EventListResponse> response =
-                    ConverterService.teamEventListToEventListResponse(
+                    this.converter.teamEventListToEventListResponse(
                             eventRepository.findAllByIsPublicTrueAndTemUsersNotContaining(user.get()));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -138,7 +136,7 @@ public class TeamEventService {
     public ResponseEntity<?> getEventDetails(EventIdRequest request) {
         Optional<TeamEvent> event = eventRepository.findById(request.getEventId());
         if (event.isPresent()) {
-            EventDetailResponse response = ConverterService.eventToEventDetail(event.get());
+            EventDetailResponse response = converter.eventToEventDetail(event.get());
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return ResponseEntity.internalServerError().body(ResponseMessages.NOT_FOUND_EVENT);
