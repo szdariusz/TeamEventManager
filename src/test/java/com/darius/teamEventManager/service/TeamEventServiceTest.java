@@ -355,13 +355,8 @@ class TeamEventServiceTest {
         when(eventRepository.findById(any())).thenReturn(Optional.of(event));
         Set<TEMUser> members = event.getTemUsers();
 
-        ResponseEntity<?> expected = ResponseEntity.internalServerError().body(new MessageResponse(NOT_MEMBER));
-
         // when
-        ResponseEntity<?> actual = teamEventService.getEventMembers(TEST_MANAGE_EVENT_REQUEST);
-
-        // then
-        assertEquals(expected, actual);
+        assertThrows(NotMemberException.class, () -> teamEventService.getEventMembers(TEST_MANAGE_EVENT_REQUEST));
     }
 
     @Test

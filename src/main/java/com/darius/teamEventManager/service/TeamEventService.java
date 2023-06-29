@@ -124,15 +124,13 @@ public class TeamEventService {
     }
 
     public ResponseEntity<?> getEventMembers(ManageEventRequest request) {
-        Optional<TeamEvent> event = eventRepository.findById(request.getEventId());
-        if (event.isPresent()) {
-            if (isMemberOf(event.get(), request.getUserId())) {
-                Set<TEMUser> members = event.get().getTemUsers();
-                return new ResponseEntity<>(members, HttpStatus.OK);
-            }
-            return ResponseEntity.internalServerError().body(new MessageResponse(ResponseMessages.NOT_MEMBER));
+        TeamEvent event = eventRepository.findById(request.getEventId()).orElseThrow(NotFoundEventException::new);
+
+        if (isMemberOf(event, request.getUserId())) {
+            Set<TEMUser> members = event.getTemUsers();
+            return new ResponseEntity<>(members, HttpStatus.OK);
         }
-        return ResponseEntity.internalServerError().body(new MessageResponse(ResponseMessages.NOT_FOUND_EVENT));
+        throw new NotMemberException();
     }
 
     public ResponseEntity<?> addUserToEventByName(ManageMemberByNameRequest request) {
