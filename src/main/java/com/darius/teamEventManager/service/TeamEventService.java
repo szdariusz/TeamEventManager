@@ -98,13 +98,10 @@ public class TeamEventService {
     }
 
     public ResponseEntity<List<EventListResponse>> getAllPublicEvents(Integer userId) {
-        Optional<TEMUser> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            List<EventListResponse> response = this.converter.teamEventListToEventListResponse(eventRepository.findAllByIsPublicTrueAndTemUsersNotContaining(user.get()));
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        return ResponseEntity.internalServerError().build();
+        TEMUser user = userRepository.findById(userId).orElseThrow(NotFoundTEMUserException::new);
 
+        List<EventListResponse> response = this.converter.teamEventListToEventListResponse(eventRepository.findAllByIsPublicTrueAndTemUsersNotContaining(user));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     public ResponseEntity<?> getAwaitingEventMembers(ManageEventRequest request) {

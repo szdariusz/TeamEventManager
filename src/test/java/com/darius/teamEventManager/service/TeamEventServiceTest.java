@@ -238,13 +238,9 @@ class TeamEventServiceTest {
     void getAllPublicEventsInvalidId() {
         // given
         when(userRepository.findById(TestData.TEST_USER_ID)).thenReturn(Optional.empty());
-        ResponseEntity<?> expected = ResponseEntity.internalServerError().build();
 
         // when
-        ResponseEntity<?> actual = teamEventService.getAllPublicEvents(TestData.TEST_USER_ID);
-
-        // then
-        assertEquals(expected, actual);
+        assertThrows(NotFoundTEMUserException.class, () -> teamEventService.getAllPublicEvents(TestData.TEST_USER_ID));
     }
 
     @Test
