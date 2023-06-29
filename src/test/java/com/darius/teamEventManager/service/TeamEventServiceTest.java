@@ -136,7 +136,7 @@ class TeamEventServiceTest {
         ResponseEntity<?> expected = ResponseEntity.ok().build();
 
         // when
-        ResponseEntity<?> actual = teamEventService.addUserToEvent(TestData.TEST_MANAGE_MEMBER_REQUEST);
+        ResponseEntity<?> actual = teamEventService.addUserToEvent(TEST_MANAGE_MEMBER_REQUEST);
 
         // then
         assertEquals(expected, actual);
@@ -147,15 +147,10 @@ class TeamEventServiceTest {
         // given
         TeamEvent event = TEST_TEAM_EVENT;
 
-        when(userRepository.findById(any())).thenReturn(Optional.empty());
-        when(eventRepository.findById(any())).thenReturn(Optional.of(event));
-        ResponseEntity<?> expected = ResponseEntity.internalServerError().body(new MessageResponse(NOT_FOUND_USER_OR_EVENT));
+        when(userRepository.findById(any())).thenThrow(NotFoundTEMUserException.class);
 
         // when
-        ResponseEntity<?> actual = teamEventService.addUserToEvent(TestData.TEST_MANAGE_MEMBER_REQUEST);
-
-        // then
-        assertEquals(expected, actual);
+        assertThrows(NotFoundTEMUserException.class, () -> teamEventService.addUserToEvent(TEST_MANAGE_MEMBER_REQUEST));
     }
 
     @Test
@@ -165,43 +160,39 @@ class TeamEventServiceTest {
 
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
         when(eventRepository.findById(any())).thenReturn(Optional.empty());
-        ResponseEntity<?> expected = ResponseEntity.internalServerError().body(new MessageResponse(NOT_FOUND_USER_OR_EVENT));
 
         // when
-        ResponseEntity<?> actual = teamEventService.addUserToEvent(TestData.TEST_MANAGE_MEMBER_REQUEST);
-
-        // then
-        assertEquals(expected, actual);
+        assertThrows(NotFoundEventException.class, () -> teamEventService.addUserToEvent(TEST_MANAGE_MEMBER_REQUEST));
     }
 
     @Test
     void declineAwaitingUserValidRequest() {
         // given
         TeamEvent event = TEST_TEAM_EVENT;
-        when(awaitingQueueRepository.findByUserIdAndEventId(any(), any())).thenReturn(Optional.ofNullable(TestData.TEST_AWAITING_QUEUE_ELEMENT));
+        when(awaitingQueueRepository.findByUserIdAndEventId(any(), any())).thenReturn(Optional.ofNullable(TEST_AWAITING_QUEUE_ELEMENT));
         when(eventRepository.findById(any())).thenReturn(Optional.of(event));
         ResponseEntity<?> expected = ResponseEntity.ok().build();
 
         // when
-        ResponseEntity<?> actual = teamEventService.declineAwaitingUser(TestData.TEST_MANAGE_MEMBER_REQUEST);
+        ResponseEntity<?> actual = teamEventService.declineAwaitingUser(TEST_MANAGE_MEMBER_REQUEST);
 
         // then
-        verify(awaitingQueueRepository, times(1)).delete(TestData.TEST_AWAITING_QUEUE_ELEMENT);
+        verify(awaitingQueueRepository, times(1)).delete(TEST_AWAITING_QUEUE_ELEMENT);
         assertEquals(expected, actual);
     }
 
     @Test
     void declineAwaitingUserNonExistingEvent() {
         // given
-        when(awaitingQueueRepository.findByUserIdAndEventId(any(), any())).thenReturn(Optional.ofNullable(TestData.TEST_AWAITING_QUEUE_ELEMENT));
+        when(awaitingQueueRepository.findByUserIdAndEventId(any(), any())).thenReturn(Optional.ofNullable(TEST_AWAITING_QUEUE_ELEMENT));
         when(eventRepository.findById(any())).thenReturn(Optional.empty());
         ResponseEntity<?> expected = ResponseEntity.internalServerError().body(new MessageResponse(NOT_FOUND_USER_OR_EVENT));
 
         // when
-        ResponseEntity<?> actual = teamEventService.declineAwaitingUser(TestData.TEST_MANAGE_MEMBER_REQUEST);
+        ResponseEntity<?> actual = teamEventService.declineAwaitingUser(TEST_MANAGE_MEMBER_REQUEST);
 
         // then
-        verify(awaitingQueueRepository, times(0)).delete(TestData.TEST_AWAITING_QUEUE_ELEMENT);
+        verify(awaitingQueueRepository, times(0)).delete(TEST_AWAITING_QUEUE_ELEMENT);
         assertEquals(expected, actual);
     }
 
@@ -301,7 +292,7 @@ class TeamEventServiceTest {
         TeamEvent event = TEST_TEAM_EVENT;
         TEMUser user = TEST_USER;
         when(eventRepository.findById(any())).thenReturn(Optional.of(event));
-        when(awaitingQueueRepository.findAllByEventId(any())).thenReturn(new HashSet<>(List.of(TestData.TEST_AWAITING_QUEUE_ELEMENT)));
+        when(awaitingQueueRepository.findAllByEventId(any())).thenReturn(new HashSet<>(List.of(TEST_AWAITING_QUEUE_ELEMENT)));
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
         Set<TEMUser> response = new HashSet<>(List.of(user));
         ResponseEntity<?> expected = new ResponseEntity<>(response, HttpStatus.OK);
@@ -412,7 +403,7 @@ class TeamEventServiceTest {
         ResponseEntity<?> expected = ResponseEntity.ok().build();
 
         // when
-        ResponseEntity<?> actual = teamEventService.removeEventMember(TestData.TEST_MANAGE_MEMBER_REQUEST);
+        ResponseEntity<?> actual = teamEventService.removeEventMember(TEST_MANAGE_MEMBER_REQUEST);
 
         // then
         verify(eventRepository, times(1)).save(any());
@@ -434,7 +425,7 @@ class TeamEventServiceTest {
         ResponseEntity<?> expected = ResponseEntity.internalServerError().body(new MessageResponse(NOT_MEMBER));
 
         // when
-        ResponseEntity<?> actual = teamEventService.removeEventMember(TestData.TEST_MANAGE_MEMBER_REQUEST);
+        ResponseEntity<?> actual = teamEventService.removeEventMember(TEST_MANAGE_MEMBER_REQUEST);
 
         // then
         verify(eventRepository, times(0)).save(any());

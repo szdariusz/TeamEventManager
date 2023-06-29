@@ -8,3 +8,4 @@ public class NotFoundEventException extends RuntimeException {
         return NOT_FOUND_EVENT;
     }
 }
+

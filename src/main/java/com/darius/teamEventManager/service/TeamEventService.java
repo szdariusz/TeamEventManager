@@ -5,6 +5,7 @@ import com.darius.teamEventManager.entity.TEMUser;
 import com.darius.teamEventManager.entity.TeamEvent;
 import com.darius.teamEventManager.exceptions.NotFoundEventException;
 import com.darius.teamEventManager.exceptions.NotFoundTEMUserException;
+import com.darius.teamEventManager.exceptions.NotMemberException;
 import com.darius.teamEventManager.exceptions.RequestAlreadyExistsException;
 import com.darius.teamEventManager.payload.request.events.CreateEventRequest;
 import com.darius.teamEventManager.payload.request.events.EventIdRequest;
@@ -55,19 +56,17 @@ public class TeamEventService {
 
     public ResponseEntity<?> addUserToEvent(ManageMemberByIdRequest request) {
 
-        Optional<TEMUser> joiner = userRepository.findById(request.getMemberToManageId());
-        Optional<TeamEvent> event = eventRepository.findById(request.getEventId());
+        TEMUser joiner = userRepository.findById(request.getMemberToManageId()).orElseThrow(NotFoundTEMUserException::new);
+        TeamEvent event = eventRepository.findById(request.getEventId()).orElseThrow(NotFoundEventException::new);
 
-        if (joiner.isPresent() && event.isPresent() && isMemberOf(event.get(), request.getUserId())) {
-
-            TeamEvent existingEvent = event.get();
-            existingEvent.addTemUser(joiner.get());
-            eventRepository.save(existingEvent);
+        if (isMemberOf(event, request.getUserId())) {
+            event.addTemUser(joiner);
+            eventRepository.save(event);
             this.declineAwaitingUser(request);
-
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.internalServerError().body(new MessageResponse(ResponseMessages.NOT_FOUND_USER_OR_EVENT));
+
+        throw new NotMemberException();
     }
 
     public ResponseEntity<?> declineAwaitingUser(ManageMemberByIdRequest request) {
