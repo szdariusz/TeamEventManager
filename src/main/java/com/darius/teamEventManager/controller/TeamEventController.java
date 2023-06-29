@@ -9,8 +9,8 @@ import com.darius.teamEventManager.payload.request.members.ManageMemberByNameReq
 import com.darius.teamEventManager.payload.response.EventListResponse;
 import com.darius.teamEventManager.service.TeamEventService;
 import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +19,11 @@ import java.util.List;
 @Log4j2
 @Api
 @CrossOrigin(origins = "*", maxAge = 3600)
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/events")
 public class TeamEventController {
-    @Autowired
-    TeamEventService eventService;
+    private final TeamEventService eventService;
 
     @PostMapping("/awaiting")
     public ResponseEntity<?> getAwaitingQueueForEvent(@RequestBody ManageEventRequest request) {

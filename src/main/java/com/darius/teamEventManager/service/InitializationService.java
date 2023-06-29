@@ -4,19 +4,20 @@ import com.darius.teamEventManager.entity.Role;
 import com.darius.teamEventManager.entity.UserRoleTypes;
 import com.darius.teamEventManager.payload.request.auth.SignupRequest;
 import com.darius.teamEventManager.repository.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+@RequiredArgsConstructor
 @Service
 public class InitializationService {
-    @Autowired
-    RoleRepository roleRepository;
-    @Autowired
-    AuthService authService;
+    private final RoleRepository roleRepository;
+
+    //@Qualifier({name_of_implementation})
+    private final AuthService authService;
 
     public void Initialize() {
         List<Role> roles = Arrays.asList(

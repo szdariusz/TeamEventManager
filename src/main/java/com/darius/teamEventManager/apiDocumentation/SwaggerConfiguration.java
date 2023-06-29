@@ -32,12 +32,11 @@ public class SwaggerConfiguration {
 
     @Bean
     public Docket api() {
-        return new Docket(DocumentationType.OAS_30)
+        return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .securityContexts(Arrays.asList(securityContext()))
-                .securitySchemes(Arrays.asList(apiKey()))
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.darius.teamEventManager.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

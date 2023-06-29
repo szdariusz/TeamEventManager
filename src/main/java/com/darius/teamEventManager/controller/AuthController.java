@@ -6,8 +6,8 @@ import com.darius.teamEventManager.payload.response.JwtResponse;
 import com.darius.teamEventManager.security.jwt.JwtUtils;
 import com.darius.teamEventManager.security.service.UserDetailsImpl;
 import com.darius.teamEventManager.service.AuthService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,16 +22,14 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Validated
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
-    AuthenticationManager authenticationManager;
-    @Autowired
-    AuthService authService;
-    @Autowired
-    JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final AuthService authService;
+    private final JwtUtils jwtUtils;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {

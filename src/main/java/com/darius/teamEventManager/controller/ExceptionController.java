@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 @Log4j2
-public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {Exception.class})
     protected ResponseEntity<?> handleAnyException(

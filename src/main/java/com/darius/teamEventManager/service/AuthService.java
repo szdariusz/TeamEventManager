@@ -7,7 +7,7 @@ import com.darius.teamEventManager.payload.request.auth.SignupRequest;
 import com.darius.teamEventManager.payload.response.MessageResponse;
 import com.darius.teamEventManager.repository.RoleRepository;
 import com.darius.teamEventManager.repository.TEMUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,16 +18,12 @@ import java.util.Set;
 import static com.darius.teamEventManager.payload.response.ResponseMessages.EMAIL_TAKEN;
 import static com.darius.teamEventManager.payload.response.ResponseMessages.USERNAME_TAKEN;
 
+@RequiredArgsConstructor
 @Service
 public class AuthService {
-    @Autowired
-    TEMUserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder encoder;
+    private final TEMUserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder encoder;
 
     public ResponseEntity<MessageResponse> createUser(SignupRequest signUpRequest) {
 

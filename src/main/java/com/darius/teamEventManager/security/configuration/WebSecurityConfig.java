@@ -73,10 +73,9 @@ public class WebSecurityConfig {
             "/api/init",
             "/api-docs/**",
             "/api/test/**",
+            "/swagger-ui-custom.html",
             "/swagger-resources/**",
             "/swagger-ui/**",
-            "/v3/api-docs",
-            "/v2/api-docs/**",
             "/webjars/**"
     };
 }

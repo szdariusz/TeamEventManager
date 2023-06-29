@@ -19,7 +19,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.2'
     implementation 'javax.validation:validation-api:2.0.1.Final'
     implementation 'org.projectlombok:lombok:1.18.22'
-    implementation 'org.webjars:swagger-ui'
+    implementation 'io.springfox:springfox-swagger-ui'
     implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
 

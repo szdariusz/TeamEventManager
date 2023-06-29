@@ -15,8 +15,8 @@ import com.darius.teamEventManager.payload.response.ResponseMessages;
 import com.darius.teamEventManager.repository.AwaitingQueueRepository;
 import com.darius.teamEventManager.repository.TEMUserRepository;
 import com.darius.teamEventManager.repository.TeamEventRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,23 +27,13 @@ import java.util.Optional;
 import java.util.Set;
 
 @Log4j2
+@RequiredArgsConstructor
 @Service
 public class TeamEventService {
-    @Autowired
-    ConverterService converter;
-    @Autowired
-    AwaitingQueueRepository awaitingRepository;
-    @Autowired
-    TeamEventRepository eventRepository;
-    @Autowired
-    TEMUserRepository userRepository;
-
-    public TeamEventService(ConverterService converter, AwaitingQueueRepository awaitingRepository, TeamEventRepository eventRepository, TEMUserRepository userRepository) {
-        this.converter = converter;
-        this.awaitingRepository = awaitingRepository;
-        this.eventRepository = eventRepository;
-        this.userRepository = userRepository;
-    }
+    private final ConverterService converter;
+    private final AwaitingQueueRepository awaitingRepository;
+    private final TeamEventRepository eventRepository;
+    private final TEMUserRepository userRepository;
 
     public ResponseEntity<?> addUserToAwaitQueue(ManageEventRequest request) {
 
@@ -115,7 +105,7 @@ public class TeamEventService {
         Optional<TEMUser> user = userRepository.findById(userId);
         if (user.isPresent()) {
             List<EventListResponse> response =
-                    converter.teamEventListToEventListResponse(eventRepository.findAllByTemUsers(user.get()));
+                    ConverterService.teamEventListToEventListResponse(eventRepository.findAllByTemUsers(user.get()));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return ResponseEntity.internalServerError().build();
@@ -125,7 +115,7 @@ public class TeamEventService {
         Optional<TEMUser> user = userRepository.findById(userId);
         if (user.isPresent()) {
             List<EventListResponse> response =
-                    this.converter.teamEventListToEventListResponse(
+                    ConverterService.teamEventListToEventListResponse(
                             eventRepository.findAllByIsPublicTrueAndTemUsersNotContaining(user.get()));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -148,7 +138,7 @@ public class TeamEventService {
     public ResponseEntity<?> getEventDetails(EventIdRequest request) {
         Optional<TeamEvent> event = eventRepository.findById(request.getEventId());
         if (event.isPresent()) {
-            EventDetailResponse response = converter.eventToEventDetail(event.get());
+            EventDetailResponse response = ConverterService.eventToEventDetail(event.get());
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return ResponseEntity.internalServerError().body(ResponseMessages.NOT_FOUND_EVENT);
