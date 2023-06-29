@@ -117,12 +117,10 @@ public class TeamEventService {
     }
 
     public ResponseEntity<?> getEventDetails(EventIdRequest request) {
-        Optional<TeamEvent> event = eventRepository.findById(request.getEventId());
-        if (event.isPresent()) {
-            EventDetailResponse response = converter.eventToEventDetail(event.get());
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        return ResponseEntity.internalServerError().body(ResponseMessages.NOT_FOUND_EVENT);
+        TeamEvent event = eventRepository.findById(request.getEventId()).orElseThrow(NotFoundEventException::new);
+
+        EventDetailResponse response = converter.eventToEventDetail(event);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     public ResponseEntity<?> getEventMembers(ManageEventRequest request) {

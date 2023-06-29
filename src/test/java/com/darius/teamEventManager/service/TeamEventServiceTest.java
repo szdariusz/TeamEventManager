@@ -319,11 +319,10 @@ class TeamEventServiceTest {
         ResponseEntity<?> expected = ResponseEntity.internalServerError().body(NOT_FOUND_EVENT);
 
         // when
-        ResponseEntity<?> actual = teamEventService.getEventDetails(new EventIdRequest(TestData.TEST_EVENT_ID));
+        assertThrows(NotFoundEventException.class, () -> teamEventService.getEventDetails(new EventIdRequest(TestData.TEST_EVENT_ID)));
 
         // then
         verify(converterService, times(0)).eventToEventDetail(any());
-        assertEquals(expected, actual);
     }
 
     @Test
