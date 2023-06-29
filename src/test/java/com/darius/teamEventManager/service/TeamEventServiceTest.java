@@ -4,10 +4,7 @@ import com.darius.teamEventManager.TestData.TestData;
 import com.darius.teamEventManager.entity.AwaitingQueueElement;
 import com.darius.teamEventManager.entity.TEMUser;
 import com.darius.teamEventManager.entity.TeamEvent;
-import com.darius.teamEventManager.exceptions.NotFoundEventException;
-import com.darius.teamEventManager.exceptions.NotFoundQueueElementException;
-import com.darius.teamEventManager.exceptions.NotFoundTEMUserException;
-import com.darius.teamEventManager.exceptions.RequestAlreadyExistsException;
+import com.darius.teamEventManager.exceptions.*;
 import com.darius.teamEventManager.payload.request.events.EventIdRequest;
 import com.darius.teamEventManager.payload.response.EventDetailResponse;
 import com.darius.teamEventManager.payload.response.EventListResponse;
@@ -294,13 +291,9 @@ class TeamEventServiceTest {
         // given
         TeamEvent event = TestData.TEST_TEAM_EVENT_2;
         when(eventRepository.findById(any())).thenReturn(Optional.of(event));
-        ResponseEntity<?> expected = ResponseEntity.internalServerError().body(new MessageResponse(NOT_MEMBER));
 
         // when
-        ResponseEntity<?> actual = teamEventService.getAwaitingEventMembers(TEST_MANAGE_EVENT_REQUEST);
-
-        // then
-        assertEquals(expected, actual);
+        assertThrows(NotMemberException.class, () -> teamEventService.getAwaitingEventMembers(TEST_MANAGE_EVENT_REQUEST));
     }
 
     @Test

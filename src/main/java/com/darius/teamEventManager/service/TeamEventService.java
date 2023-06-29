@@ -105,15 +105,15 @@ public class TeamEventService {
     }
 
     public ResponseEntity<?> getAwaitingEventMembers(ManageEventRequest request) {
-        Optional<TeamEvent> event = eventRepository.findById(request.getEventId());
-        if (isMemberOf(event.get(), request.getUserId())) {
+        TeamEvent event = eventRepository.findById(request.getEventId()).orElseThrow(NotFoundTEMUserException::new);
+        if (isMemberOf(event, request.getUserId())) {
             Set<AwaitingQueueElement> members = awaitingRepository.findAllByEventId(request.getEventId());
             Set<TEMUser> response = new HashSet<>();
             members.forEach(member -> response.add(userRepository.findById(member.getUserId()).get()));
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return ResponseEntity.internalServerError().body(new MessageResponse(ResponseMessages.NOT_MEMBER));
+        throw new NotMemberException();
     }
 
     public ResponseEntity<?> getEventDetails(EventIdRequest request) {
