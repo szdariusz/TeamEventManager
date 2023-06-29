@@ -135,19 +135,23 @@ public class TeamEventService {
 
     public ResponseEntity<?> addUserToEventByName(ManageMemberByNameRequest request) {
 
-        Optional<TEMUser> joiner = userRepository.findByUsername(request.getMemberToManage());
-        Optional<TeamEvent> event = eventRepository.findById(request.getEventId());
+        TEMUser joiner = userRepository.findByUsername(request.getMemberToManage()).orElseThrow(NotFoundTEMUserException::new);
+        TeamEvent event = eventRepository.findById(request.getEventId()).orElseThrow(NotFoundEventException::new);
 
-        if (joiner.isPresent() && event.isPresent() && isMemberOf(event.get(), request.getUserId())) {
-
-            TeamEvent existingEvent = event.get();
-            existingEvent.addTemUser(joiner.get());
-            eventRepository.save(existingEvent);
-            this.declineAwaitingUser(ManageMemberByIdRequest.builder().userId(request.getUserId()).eventId(request.getEventId()).memberToManageId(joiner.get().getId()).build());
+        if (isMemberOf(event, request.getUserId())) {
+            event.addTemUser(joiner);
+            eventRepository.save(event);
+            this.declineAwaitingUser(
+                    ManageMemberByIdRequest.builder()
+                            .userId(request.getUserId())
+                            .eventId(request.getEventId())
+                            .memberToManageId(joiner.getId())
+                            .build());
 
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.internalServerError().body(new MessageResponse(ResponseMessages.NOT_FOUND_USER_OR_EVENT));
+
+        throw new NotMemberException();
     }
 
     public ResponseEntity<?> removeEventMember(ManageMemberByIdRequest request) {
