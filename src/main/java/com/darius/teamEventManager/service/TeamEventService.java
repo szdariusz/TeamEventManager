@@ -91,12 +91,10 @@ public class TeamEventService {
     }
 
     public ResponseEntity<List<EventListResponse>> getAllEventsForUser(Integer userId) {
-        Optional<TEMUser> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            List<EventListResponse> response = converter.teamEventListToEventListResponse(eventRepository.findAllByTemUsers(user.get()));
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        return ResponseEntity.internalServerError().build();
+        TEMUser user = userRepository.findById(userId).orElseThrow(NotFoundTEMUserException::new);
+
+        List<EventListResponse> response = converter.teamEventListToEventListResponse(eventRepository.findAllByTemUsers(user));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     public ResponseEntity<List<EventListResponse>> getAllPublicEvents(Integer userId) {

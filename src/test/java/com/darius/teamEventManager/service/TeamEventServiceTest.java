@@ -270,13 +270,9 @@ class TeamEventServiceTest {
         TeamEvent event = TEST_TEAM_EVENT;
         event.addTemUser(TEST_USER);
         when(userRepository.findById(TestData.TEST_USER_ID)).thenReturn(Optional.empty());
-        ResponseEntity<?> expected = ResponseEntity.internalServerError().build();
 
         // when
-        ResponseEntity<?> actual = teamEventService.getAllEventsForUser(TestData.TEST_USER_ID);
-
-        // then
-        assertEquals(expected, actual);
+        assertThrows(NotFoundTEMUserException.class, () -> teamEventService.getAllEventsForUser(TestData.TEST_USER_ID));
     }
 
     @Test
