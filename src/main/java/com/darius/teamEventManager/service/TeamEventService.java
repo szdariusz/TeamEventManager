@@ -11,8 +11,6 @@ import com.darius.teamEventManager.payload.request.members.ManageMemberByIdReque
 import com.darius.teamEventManager.payload.request.members.ManageMemberByNameRequest;
 import com.darius.teamEventManager.payload.response.EventDetailResponse;
 import com.darius.teamEventManager.payload.response.EventListResponse;
-import com.darius.teamEventManager.payload.response.MessageResponse;
-import com.darius.teamEventManager.payload.response.ResponseMessages;
 import com.darius.teamEventManager.repository.AwaitingQueueRepository;
 import com.darius.teamEventManager.repository.TEMUserRepository;
 import com.darius.teamEventManager.repository.TeamEventRepository;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Log4j2
@@ -155,18 +152,15 @@ public class TeamEventService {
     }
 
     public ResponseEntity<?> removeEventMember(ManageMemberByIdRequest request) {
-        Optional<TeamEvent> event = eventRepository.findById(request.getEventId());
-        Optional<TEMUser> member = userRepository.findById(request.getMemberToManageId());
+        TeamEvent event = eventRepository.findById(request.getEventId()).orElseThrow(NotFoundEventException::new);
+        TEMUser member = userRepository.findById(request.getMemberToManageId()).orElseThrow(NotFoundTEMUserException::new);
 
-        if (isMemberOf(event.get(), request.getUserId()) && member.isPresent()) {
-            if (isMemberOf(event.get(), request.getMemberToManageId())) {
-                TeamEvent existingEvent = event.get();
-                existingEvent.removeTemUser(member.get());
-                eventRepository.save(existingEvent);
-                return ResponseEntity.ok().build();
-            }
+        if (isMemberOf(event, member.getId()) && isMemberOf(event, request.getMemberToManageId())) {
+            event.removeTemUser(member);
+            eventRepository.save(event);
+            return ResponseEntity.ok().build();
         }
-        return ResponseEntity.internalServerError().body(new MessageResponse(ResponseMessages.NOT_MEMBER));
+        throw new NotMemberException();
     }
 
     private boolean isMemberOf(TeamEvent event, Integer userId) {

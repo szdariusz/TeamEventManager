@@ -26,7 +26,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.darius.teamEventManager.TestData.TestData.*;
-import static com.darius.teamEventManager.payload.response.ResponseMessages.*;
+import static com.darius.teamEventManager.payload.response.ResponseMessages.ALREADY_MEMBER;
+import static com.darius.teamEventManager.payload.response.ResponseMessages.NOT_FOUND_EVENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -387,20 +388,16 @@ class TeamEventServiceTest {
         // given
         TeamEvent event = TEST_TEAM_EVENT;
         event.setTemUsers(new HashSet<>());
-        System.out.println(event.getTemUsers());
         TEMUser user = TEST_USER;
         event.addTemUser(user);
 
         when(eventRepository.findById(any())).thenReturn(Optional.of(event));
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
 
-        ResponseEntity<?> expected = ResponseEntity.internalServerError().body(new MessageResponse(NOT_MEMBER));
-
         // when
-        ResponseEntity<?> actual = teamEventService.removeEventMember(TEST_MANAGE_MEMBER_REQUEST);
+        assertThrows(NotMemberException.class, () -> teamEventService.removeEventMember(TEST_MANAGE_MEMBER_REQUEST));
 
         // then
         verify(eventRepository, times(0)).save(any());
-        assertEquals(expected, actual);
     }
 }
