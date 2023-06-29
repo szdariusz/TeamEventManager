@@ -5,6 +5,7 @@ import com.darius.teamEventManager.entity.AwaitingQueueElement;
 import com.darius.teamEventManager.entity.TEMUser;
 import com.darius.teamEventManager.entity.TeamEvent;
 import com.darius.teamEventManager.exceptions.NotFoundEventException;
+import com.darius.teamEventManager.exceptions.NotFoundQueueElementException;
 import com.darius.teamEventManager.exceptions.NotFoundTEMUserException;
 import com.darius.teamEventManager.exceptions.RequestAlreadyExistsException;
 import com.darius.teamEventManager.payload.request.events.EventIdRequest;
@@ -133,13 +134,9 @@ class TeamEventServiceTest {
 
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
         when(eventRepository.findById(any())).thenReturn(Optional.of(event));
-        ResponseEntity<?> expected = ResponseEntity.ok().build();
 
         // when
-        ResponseEntity<?> actual = teamEventService.addUserToEvent(TEST_MANAGE_MEMBER_REQUEST);
-
-        // then
-        assertEquals(expected, actual);
+        assertThrows(NotFoundQueueElementException.class, () -> teamEventService.addUserToEvent(TEST_MANAGE_MEMBER_REQUEST));
     }
 
     @Test
@@ -186,14 +183,12 @@ class TeamEventServiceTest {
         // given
         when(awaitingQueueRepository.findByUserIdAndEventId(any(), any())).thenReturn(Optional.ofNullable(TEST_AWAITING_QUEUE_ELEMENT));
         when(eventRepository.findById(any())).thenReturn(Optional.empty());
-        ResponseEntity<?> expected = ResponseEntity.internalServerError().body(new MessageResponse(NOT_FOUND_USER_OR_EVENT));
 
         // when
-        ResponseEntity<?> actual = teamEventService.declineAwaitingUser(TEST_MANAGE_MEMBER_REQUEST);
+        assertThrows(NotFoundEventException.class, () -> teamEventService.declineAwaitingUser(TEST_MANAGE_MEMBER_REQUEST));
 
         // then
         verify(awaitingQueueRepository, times(0)).delete(TEST_AWAITING_QUEUE_ELEMENT);
-        assertEquals(expected, actual);
     }
 
     @Test

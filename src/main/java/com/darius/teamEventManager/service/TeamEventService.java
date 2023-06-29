@@ -3,10 +3,7 @@ package com.darius.teamEventManager.service;
 import com.darius.teamEventManager.entity.AwaitingQueueElement;
 import com.darius.teamEventManager.entity.TEMUser;
 import com.darius.teamEventManager.entity.TeamEvent;
-import com.darius.teamEventManager.exceptions.NotFoundEventException;
-import com.darius.teamEventManager.exceptions.NotFoundTEMUserException;
-import com.darius.teamEventManager.exceptions.NotMemberException;
-import com.darius.teamEventManager.exceptions.RequestAlreadyExistsException;
+import com.darius.teamEventManager.exceptions.*;
 import com.darius.teamEventManager.payload.request.events.CreateEventRequest;
 import com.darius.teamEventManager.payload.request.events.EventIdRequest;
 import com.darius.teamEventManager.payload.request.events.ManageEventRequest;
@@ -43,8 +40,7 @@ public class TeamEventService {
 
         TEMUser user = userRepository.findById(request.getUserId()).orElseThrow(NotFoundTEMUserException::new);
         TeamEvent event = eventRepository.findById(request.getEventId()).orElseThrow(NotFoundEventException::new);
-        boolean elementExists =
-                awaitingRepository.existsByUserIdAndEventId(user.getId(), event.getId());
+        boolean elementExists = awaitingRepository.existsByUserIdAndEventId(user.getId(), event.getId());
 
         if (elementExists) {
             throw new RequestAlreadyExistsException();
@@ -70,22 +66,21 @@ public class TeamEventService {
     }
 
     public ResponseEntity<?> declineAwaitingUser(ManageMemberByIdRequest request) {
-        Optional<AwaitingQueueElement> element =
-                awaitingRepository.findByUserIdAndEventId(request.getMemberToManageId(), request.getEventId());
-        Optional<TeamEvent> event = eventRepository.findById(request.getEventId());
-        if (event.isPresent()) {
-            if (element.isPresent() && isMemberOf(event.get(), request.getUserId())) {
-                awaitingRepository.delete(element.get());
-                return ResponseEntity.ok().build();
-            }
+        AwaitingQueueElement element = awaitingRepository.findByUserIdAndEventId(request.getMemberToManageId(), request.getEventId())
+                .orElseThrow(NotFoundQueueElementException::new);
+        TeamEvent event = eventRepository.findById(request.getEventId()).orElseThrow(NotFoundEventException::new);
+
+        if (isMemberOf(event, request.getUserId())) {
+            awaitingRepository.delete(element);
+            return ResponseEntity.ok().build();
         }
-        return ResponseEntity.internalServerError().body(new MessageResponse(ResponseMessages.NOT_FOUND_USER_OR_EVENT));
+
+        throw new NotMemberException();
     }
 
     public ResponseEntity<?> createEvent(CreateEventRequest request) {
 
-        TeamEvent created = new TeamEvent(request.getName(), request.getDescription(), request.getDate(),
-                request.getLocation(), request.getIsPublic());
+        TeamEvent created = new TeamEvent(request.getName(), request.getDescription(), request.getDate(), request.getLocation(), request.getIsPublic());
 
         Optional<TEMUser> creator = userRepository.findById(request.getUserId());
 
@@ -101,8 +96,7 @@ public class TeamEventService {
     public ResponseEntity<List<EventListResponse>> getAllEventsForUser(Integer userId) {
         Optional<TEMUser> user = userRepository.findById(userId);
         if (user.isPresent()) {
-            List<EventListResponse> response =
-                    converter.teamEventListToEventListResponse(eventRepository.findAllByTemUsers(user.get()));
+            List<EventListResponse> response = converter.teamEventListToEventListResponse(eventRepository.findAllByTemUsers(user.get()));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return ResponseEntity.internalServerError().build();
@@ -111,9 +105,7 @@ public class TeamEventService {
     public ResponseEntity<List<EventListResponse>> getAllPublicEvents(Integer userId) {
         Optional<TEMUser> user = userRepository.findById(userId);
         if (user.isPresent()) {
-            List<EventListResponse> response =
-                    this.converter.teamEventListToEventListResponse(
-                            eventRepository.findAllByIsPublicTrueAndTemUsersNotContaining(user.get()));
+            List<EventListResponse> response = this.converter.teamEventListToEventListResponse(eventRepository.findAllByIsPublicTrueAndTemUsersNotContaining(user.get()));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return ResponseEntity.internalServerError().build();
@@ -163,10 +155,7 @@ public class TeamEventService {
             TeamEvent existingEvent = event.get();
             existingEvent.addTemUser(joiner.get());
             eventRepository.save(existingEvent);
-            this.declineAwaitingUser(ManageMemberByIdRequest.builder()
-                    .userId(request.getUserId())
-                    .eventId(request.getEventId())
-                    .memberToManageId(joiner.get().getId()).build());
+            this.declineAwaitingUser(ManageMemberByIdRequest.builder().userId(request.getUserId()).eventId(request.getEventId()).memberToManageId(joiner.get().getId()).build());
 
             return ResponseEntity.ok().build();
         }
