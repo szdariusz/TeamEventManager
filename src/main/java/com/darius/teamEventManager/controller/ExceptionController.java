@@ -18,7 +18,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     protected ResponseEntity<?> handleAnyException(
             Exception ex, WebRequest request) {
         String bodyOfResponse = "Something went wrong! Try to refresh or please contact the developers!";
-        log.info(request.toString(), request);
+        log.debug("Request: {}", request);
         log.error(ex.getMessage(), ex);
         return new ResponseEntity<>(new MessageResponse(bodyOfResponse + "(" + ex.getMessage() + ")"), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }

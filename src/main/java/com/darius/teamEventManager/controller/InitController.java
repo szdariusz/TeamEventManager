@@ -19,7 +19,7 @@ public class InitController {
 
     @GetMapping
     ResponseEntity<Void> initializeRoles() {
-        log.info("Initialization request");
+        log.debug("Initialization request");
         initializationService.Initialize();
         return ResponseEntity.ok().build();
     }
