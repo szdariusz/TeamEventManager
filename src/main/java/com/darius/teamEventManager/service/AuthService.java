@@ -77,10 +77,10 @@ public class AuthService {
     }
 
     private boolean isUsernameTaken(String username) {
-        return !userRepository.existsByUsername(username);
+        return userRepository.existsByUsername(username);
     }
 
     private boolean isEmailTaken(String email) {
-        return !userRepository.existsByEmailAddress(email);
+        return userRepository.existsByEmailAddress(email);
     }
 }

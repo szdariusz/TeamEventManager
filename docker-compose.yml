@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+  frontend:
+    image: frontend
+    ports:
+      - 3000:80
+    networks: 
+      - team-event-manager
+
+  backend:
+    build:
+      context: ./TeamEventManager
+      dockerfile: Dockerfile
+    image: backend
+    restart: always
+    depends_on:
+      - database
+    ports: 
+      - 8080:8080
+    networks: 
+      - team-event-manager
+    volumes: 
+      - ./logs:/build/logs
+  
+  database:
+    image: mysql:latest
+    ports: 
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: TeamManager
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql-database-data-volume:/var/lib/mysql
+
+volumes:
+  mysql-database-data-volume:
+networks:
+  team-event-manager:

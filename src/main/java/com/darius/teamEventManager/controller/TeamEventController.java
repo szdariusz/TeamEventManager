@@ -27,69 +27,69 @@ public class TeamEventController {
 
     @PostMapping("/awaiting")
     public ResponseEntity<?> getAwaitingQueueForEvent(@RequestBody ManageEventRequest request) {
-        log.debug("/awaiting: {}", request);
+        log.info("/awaiting: {}", request);
         return eventService.getAwaitingEventMembers(request);
     }
 
     @PostMapping("/awaiting/accept")
     public ResponseEntity<?> acceptAwaitingUser(@RequestBody ManageMemberByIdRequest request) {
-        log.debug("/awaiting/accept: {}", request);
+        log.info("/awaiting/accept: {}", request);
         return eventService.addUserToEvent(request);
     }
 
     @PostMapping("/awaiting/decline")
     public ResponseEntity<?> declineAwaitingUser(@RequestBody ManageMemberByIdRequest request) {
-        log.debug("/awaiting/decline: {}", request);
+        log.info("/awaiting/decline: {}", request);
         return eventService.declineAwaitingUser(request);
     }
 
     @PostMapping("/create")
     public ResponseEntity<?> createNewEvent(@RequestBody CreateEventRequest request) {
-        log.debug("/create: {}", request);
+        log.info("/create: {}", request);
         return eventService.createEvent(request);
     }
 
     @PostMapping("/details")
     public ResponseEntity<?> getEventDetails(@RequestBody EventIdRequest request) {
-        log.debug("/details: {}", request);
+        log.info("/details: {}", request);
         return eventService.getEventDetails(request);
     }
 
     @PostMapping("/invite")
     public ResponseEntity<?> inviteUser(@RequestBody ManageMemberByNameRequest request) {
-        log.debug("/invite: {}", request);
+        log.info("/invite: {}", request);
         return eventService.addUserToEventByName(request);
     }
 
     @PutMapping("/join")
     public ResponseEntity<?> joinToEvent(@RequestBody ManageEventRequest request) {
-        log.debug("/join: {}", request);
+        log.info("/join: {}", request);
         return eventService.addUserToAwaitQueue(request);
     }
 
     @PostMapping("/members")
     public ResponseEntity<?> getEventMembers(@RequestBody ManageEventRequest request) {
-        log.debug("/members: {}", request);
+        log.info("/members: {}", request);
         return eventService.getEventMembers(request);
     }
 
     @PostMapping("/members/remove")
     public ResponseEntity<?> removeEventMember(@RequestBody ManageMemberByIdRequest request) {
-        log.debug("/members/remove: {}", request);
+        log.info("/members/remove: {}", request);
         return eventService.removeEventMember(request);
     }
 
     @PostMapping("/personal")
     public ResponseEntity<List<EventListResponse>> getAllPersonalEvents(
             @RequestBody UserIdRequest request) {
-        log.debug("/personal: {}", request);
+        log.info("/personal: {}", request);
         return eventService.getAllEventsForUser(request.getUserId());
     }
 
     @PostMapping("/public")
     public ResponseEntity<List<EventListResponse>> getAllPublicEvents(
             @RequestBody UserIdRequest request) {
-        log.debug("/public: {}", request);
+        log.info("/public: {}", request);
         return eventService.getAllPublicEvents(request.getUserId());
     }
 

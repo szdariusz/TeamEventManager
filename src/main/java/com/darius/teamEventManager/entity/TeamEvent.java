@@ -29,11 +29,11 @@ public class TeamEvent {
     private String location;
     @Column(name = "is_public")
     private boolean isPublic;
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Vote> votes;
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Comment> comments;
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<TodoList> todolists;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "team_events_tem_users",

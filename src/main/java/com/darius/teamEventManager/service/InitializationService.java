@@ -18,7 +18,7 @@ public class InitializationService {
 
     //@Qualifier({name_of_implementation})
     private final AuthService authService;
-
+    
     public void Initialize() {
         List<Role> roles = Arrays.asList(
                 new Role(UserRoleTypes.ROLE_USER),
