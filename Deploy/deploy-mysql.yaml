@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-sql
+  labels: 
+    app: myapp-sql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp-sql
+  template:
+    metadata:
+      labels:
+        app: myapp-sql
+    spec:
+      containers:
+      - name: myapp-sql
+        image: darius001/database:latest
+        ports: 
+        - containerPort: 3306
+        env:
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: myapp-config
+              key: database-name
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secret
+              key: mysql-root-pass
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-sql
+spec:
+  selector:
+    app: myapp-sql
+  type: LoadBalancer
+  ports:
+  - port: 3306
+    targetPort: 3306
+    protocol: TCP
+
