@@ -1,0 +1,9 @@
+# ignore folders
+.git
+.cache
+.idea
+
+# ignore files
+*.md
+application-test.properties
+
